@@ -2,6 +2,7 @@ package org.codexdei.ejemplos.set;
 
 import org.codexdei.ejemplos.excepciones.IngresoDatosException;
 import org.codexdei.ejemplos.modelos.Alumno;
+import org.codexdei.ejemplos.modelos.Persona;
 
 import javax.swing.*;
 import java.util.Comparator;
@@ -23,6 +24,9 @@ public class EjemploTreesetComparable{
             //por lo que si elegimos 'nota' como valor a comparar si hay alguna nota repetida
             //elimina todo registro que tenga la misma nota
             //ver el siguiente ejemplo para comprobarlo
+
+            System.out.println("************** Ordenando con expresion Lampda *****************+");
+
             Set<Alumno> sa = new TreeSet<>((a,b) -> a.getNota().compareTo(b.getNota()));
 
             sa.add(new Alumno("Pedro", "Apostol", 3.5));
@@ -35,6 +39,19 @@ public class EjemploTreesetComparable{
                     Double.parseDouble(JOptionPane.showInputDialog("Ingrese la nota del alumno"))));
 
             System.out.println(sa);
+
+            System.out.println("************* Ordenando con Comparator - comparing()");
+            Set<Alumno> alumnosExtranjeros = new TreeSet<>(Comparator.comparing(
+                                Alumno::getApellido).thenComparing(Alumno::getNombre).thenComparing(Alumno::getNota));
+
+            alumnosExtranjeros.add(new Alumno("Jeysson", "Oyola",3.7));
+            alumnosExtranjeros.add(new Alumno("Robinson","Lopez",4.0));
+            alumnosExtranjeros.add(new Alumno("Melvin","Cayama",4.8));
+            alumnosExtranjeros.add(new Alumno("Miguel","Cayama",4.8));
+            alumnosExtranjeros.add(new Alumno("Miguel","Cayama",2.0));
+            alumnosExtranjeros.add(new Alumno("Miguel","Cayama",4.7));
+
+            System.out.println(alumnosExtranjeros);
 
         }catch (IngresoDatosException e){
 
