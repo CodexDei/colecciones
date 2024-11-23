@@ -1,14 +1,15 @@
 package org.codexdei.ejemplos.map;
 
-import org.w3c.dom.ls.LSOutput;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-import java.util.*;
-
-public class EjemploHashMap {
+public class EjemploHashMapObject {
 
     public static void main(String[] args) {
 
-        Map<String, String> person = new HashMap<>();
+        Map<String, Object> person = new HashMap<>();
 
         //verificar si esta vacio
         System.out.println("Contains items?: " + !person.isEmpty());
@@ -24,6 +25,16 @@ public class EjemploHashMap {
         //se puede tener una llave null
         person.put(null,"null");
 
+        Map<String,String> address = new HashMap<>();
+
+        address.put("country","USA");
+        address.put("state","California");
+        address.put("city","Santa Barbara");
+        address.put("street", "One Stree");
+        address.put("number","120");
+        //Anidacion de HashMap
+        person.put("address",address);
+
         System.out.println(person);
         //verificar elementos mediante las llaves o keys
         System.out.println("Name: " + person.get("name"));
@@ -31,14 +42,22 @@ public class EjemploHashMap {
         System.out.println("LastName pattern: " + person.get("patternSurname"));
         System.out.println("Age: " + person.get("age"));
         System.out.println("Email: " + person.get("email"));
-        System.out.println(" NullValue: " + person.get(null));
+
+        Map<String,String> addressPerson = (Map<String,String>)person.get("address");
+        String name = (String) person.get("name");
+        String lastName = (String) person.get("lastName");
+        String country = (String) addressPerson.get("country");
+        String city = (String) addressPerson.get("city");
+        String neighborhood = (String) addressPerson.getOrDefault("neighborhood","beach");
+        System.out.println("'" + name + "' live in the '" + country + "' in the city of '"
+                            + city +  "' specifically on '" + neighborhood + "'");
 
         //Metodos mas importantes
         //Eliminando con los datos de la llave y valor
         boolean deletionStatus = person.remove("patternSurname","King");
         System.out.println("was the key delete?: " + deletionStatus);
         //Eliminando con la llave o key
-        String  deletionEmail = person.remove("email");
+        Object  deletionEmail = person.remove("email");
         System.out.println("Verifying the deletion of: " + deletionEmail);
         System.out.println(person);
         //Si contiene una llave o key
@@ -50,9 +69,9 @@ public class EjemploHashMap {
         //AL repetir la llave con un nuevo valor fue sustituido
         System.out.println("The map person contains 'Yorking'?: " + containsItem);
         //values retorna una coleccion
-        Collection<String> values = person.values();
+        Collection<Object> values = person.values();
         System.out.println("Printing values:");
-        for (String v : values){
+        for (Object v : values){
             System.out.println("V: " + v);
         }
         System.out.println("Printing keys:");
@@ -63,14 +82,36 @@ public class EjemploHashMap {
             System.out.println("K: " + k);
         }
         //Imprimiendo llaves y valores
-        System.out.println("********++ Imprimiendo llaves y valores *********");
-        for (Map.Entry<String,String> par : person.entrySet()){
-            System.out.println("Keys:" + par.getKey() +" ==> " + "values: " + par.getValue());
+        System.out.println("********++ Imprimiendo llaves y valores: entryset *********");
+        for (Map.Entry<String,Object> par : person.entrySet()){
+            Object v = person.get(par);
+            if (v instanceof Map){
+
+                Map<String,String> addressMap = (Map<String,String>) v;
+                String nam = (String)person.get("name");
+
+                System.out.println("The country of " + nam + " is " + addressMap.get("country"));
+                System.out.println("The city of " + nam + " is " + addressMap.get("city"));
+                System.out.println("The neighborhood of " + nam + " is " + addressMap.getOrDefault("neighborhood", "forest"));
+
+            }else {
+                System.out.println("Keys:" + par.getKey() +" ==> " + "values: " + par.getValue());
+            }
         }
-        System.out.println("********++ Otra forma Imprimiendo llaves y valores *********");
+        System.out.println("********++ Otra forma Imprimiendo llaves y valores: keySet *********");
         for (String k : person.keySet()){
-            String v = person.get(k);
-            System.out.println("Key: " + k + " ==> " + "value: " + v);
+            Object v = person.get(k);
+            if (v instanceof Map){
+
+                Map<String,String> addressMap = (Map<String,String>) v;
+                String nam = (String)person.get("name");
+
+                for (Map.Entry<String,String> addressPar : address.entrySet()){
+                    System.out.println("Keys:" + addressPar.getKey() +" ==> " + "values: " + addressPar.getValue());
+                }
+            }else {
+                System.out.println("Key: " + k + " ==> " + "value: " + v);
+            }
         }
         //Otra forma imprimir llaves y valores con una expresion Lampda
         System.out.println("********++ Imprimiendo llaves y valores con expresion lampda *********");
